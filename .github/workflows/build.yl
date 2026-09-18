@@ -1,6 +1,7 @@
 name: Build SO
-on: [push, workflow_dispatch]
-jobs:
+on:
+  push:
+  workflow_dispatch:
   build:
     runs-on: ubuntu-latest
     steps:
