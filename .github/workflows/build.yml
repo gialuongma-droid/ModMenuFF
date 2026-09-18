@@ -1,0 +1,29 @@
+name: Build SO
+on:
+  push:
+  workflow_dispatch:
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: nttld/setup-ndk@v1
+        with:
+          ndk-version: r25c
+      - name: Clone deps
+        run: |
+          git clone https://github.com/ocornut/imgui
+          git clone --depth 1 https://github.com/jmpews/Dobby
+      - name: Build SO
+        run: |
+          $ANDROID_NDK_HOME/toolchains/llvm/prebuilt/linux-x86_64/bin/aarch64-linux-android21-clang++ \
+            -shared -fPIC -o libmenu.so libmenu.cpp \
+            imgui/imgui.cpp imgui/imgui_draw.cpp imgui/imgui_widgets.cpp imgui/imgui_tables.cpp \
+            imgui/backends/imgui_impl_opengl3.cpp \
+            -I imgui -I imgui/backends -I Dobby/include \
+            -llog -landroid -lEGL -lGLESv3 -std=c++17
+      - uses: actions/upload-artifact@v4
+        with:
+          name: libmenu
+          path: libmenu.so
+          
