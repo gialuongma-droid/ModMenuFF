@@ -2,6 +2,7 @@ name: Build SO
 on:
   push:
   workflow_dispatch:
+jobs:
   build:
     runs-on: ubuntu-latest
     steps:
